@@ -17,15 +17,7 @@ except KeyError:
     print("Set them before running this sample.")
     exit()
 
-# Set the values of your computer vision endpoint and computer vision key
-# as environment variables:
-# try:
-#     endpoint = 'https://sk-testing-ocr.cognitiveservices.azure.com/'
-#     key = '0b8bce726717461b88485fbb7936cfd6'
-# except KeyError:
-#     print("Missing environment variable 'VISION_ENDPOINT' or 'VISION_KEY'")
-#     print("Set them before running this sample.")
-#     exit()
+
 
 
 
