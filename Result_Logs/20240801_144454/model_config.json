@@ -1,0 +1,18 @@
+{
+    "Configuration": {
+        "num_node_features": 776,
+        "num_classes": 5,
+        "hidden_channels": 4096,
+        "num_gcn_layers": 3,
+        "num_gat_layers": 3,
+        "use_spatial_attention": true,
+        "num_attention_heads": 8,
+        "learning_rate": 5e-05,
+        "epochs": 1000,
+        "batch_size": 4,
+        "regenerate_bert_embeddings": false,
+        "log_training_reports": true,
+        "enable_training": true,
+        "enable_evaluation": true
+    }
+}

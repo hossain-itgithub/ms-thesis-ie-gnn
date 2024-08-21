@@ -1,0 +1,10 @@
+ConfigurableGNN(
+  (gcn_layers): ModuleList(
+    (0): GCNConv(776, 5000)
+    (1-2): 2 x GCNConv(5000, 5000)
+  )
+  (gat_layers): ModuleList(
+    (0-2): 3 x GATConv(5000, 5000, heads=4)
+  )
+  (lin): Linear(in_features=5000, out_features=5, bias=True)
+)

@@ -1,0 +1,15 @@
+ConfigurableGNN(
+  (gcn_layers): ModuleList(
+    (0): GCNConv(776, 2048)
+    (1-2): 2 x GCNConv(2048, 2048)
+  )
+  (gat_layers): ModuleList(
+    (0-2): 3 x GATConv(2048, 2048, heads=1)
+  )
+  (spatial_attention): SpatialAttentionLayer(
+    (query): Linear(in_features=2048, out_features=2048, bias=True)
+    (key): Linear(in_features=2048, out_features=2048, bias=True)
+    (value): Linear(in_features=2048, out_features=2048, bias=True)
+  )
+  (lin): Linear(in_features=2048, out_features=5, bias=True)
+)

@@ -1,0 +1,441 @@
+import os
+import json
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from transformers import AutoModel, AutoTokenizer
+from torch_geometric.nn import GATConv, GCNConv
+from torch_geometric.data import Data, Dataset, DataLoader
+from tqdm import tqdm
+from torch.optim.lr_scheduler import ReduceLROnPlateau
+from torch.cuda.amp import GradScaler, autocast
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report
+from torch.utils.tensorboard import SummaryWriter  # Import TensorBoard SummaryWriter
+import networkx as nx
+import matplotlib.pyplot as plt
+from torch_geometric.utils import to_networkx
+from PIL import Image, ImageDraw, ImageFont
+import numpy as np
+from torchinfo import summary  # Import summary from torchinfo
+import matplotlib
+matplotlib.use('webagg')
+
+label_dict = {"company": 0, "date": 1, "address": 2, "total": 3, "other":4}
+
+# Define paths
+img_folder = "data3/train/img"
+ocr_folder = "data3/train/box"
+label_folder = "data3/train/entities"
+emb_folder = "data3/train/embeddings"
+test_img_folder = "data3/test/img"
+test_ocr_folder = "data3/test/box"
+test_label_folder = "data3/test/entities"
+test_emb_folder = "data3/test/embeddings"
+model_save_path = "gat_gcn_model_bert_11jul24.pth"
+logs_folder = "logs"
+
+# Check for CUDA
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+print(f'Using device: {device}')
+
+# Create logs folder if it doesn't exist
+os.makedirs(logs_folder, exist_ok=True)
+
+# Load pretrained multilingual BERT model and tokenizer
+tokenizer = AutoTokenizer.from_pretrained("bert-base-multilingual-cased")
+bert_model = AutoModel.from_pretrained("bert-base-multilingual-cased").to(device)
+
+# Function to get text embeddings using BERT
+def get_text_embeddings(text):
+    inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True).to(device)
+    outputs = bert_model(**inputs)
+    return outputs.last_hidden_state.mean(dim=1)  # Get the mean of the output embeddings
+
+# Function to generate learnable positional embeddings
+class PositionalEmbedding(nn.Module):
+    def __init__(self, emb_size):
+        super(PositionalEmbedding, self).__init__()
+        self.linear = nn.Linear(4, emb_size)  # 4 for bounding box coordinates [x_min, y_min, x_max, y_max]
+
+    def forward(self, bounding_boxes):
+        return self.linear(bounding_boxes)
+
+class NodeFeatureCombiner(nn.Module):
+    def __init__(self, text_emb_size, pos_emb_size):
+        super(NodeFeatureCombiner, self).__init__()
+        combined_size = text_emb_size + pos_emb_size
+        self.fc = nn.Linear(combined_size, combined_size)
+
+    def forward(self, text_emb, pos_emb):
+        combined = torch.cat((text_emb, pos_emb), dim=1)
+        assert combined.size(1) == (text_emb.size(1) + pos_emb.size(1)), f"Combined size should be {text_emb.size(1) + pos_emb.size(1)}, but got {combined.size(1)}"
+        return self.fc(combined)
+
+# Spatial Transformer Network (STN) for normalizing bounding box coordinates
+class SpatialTransformer(nn.Module):
+    def __init__(self):
+        super(SpatialTransformer, self).__init__()
+        self.localization = nn.Sequential(
+            nn.Linear(4, 32),
+            nn.ReLU(True),
+            nn.Linear(32, 32),
+            nn.ReLU(True),
+            nn.Linear(32, 4)
+        )
+
+    def forward(self, bbox):
+        theta = self.localization(bbox)
+        return theta
+
+# Graph Convolutional and Attention Network (GCNGAT)
+class GCNGAT(nn.Module):
+    def __init__(self, in_channels, hidden_channels, out_channels, num_gcn_layers, num_gat_layers, heads=8, dropout=0.6):
+        super(GCNGAT, self).__init__()
+        self.gcn_layers = nn.ModuleList()
+        self.gat_layers = nn.ModuleList()
+
+        # Input GCN layer
+        self.gcn_layers.append(GCNConv(in_channels, hidden_channels))
+
+        # Hidden GCN layers
+        for _ in range(num_gcn_layers - 1):
+            self.gcn_layers.append(GCNConv(hidden_channels, hidden_channels))
+
+        # Input GAT layer
+        self.gat_layers.append(GATConv(hidden_channels, hidden_channels, heads=heads, dropout=dropout))
+
+        # Hidden GAT layers
+        for _ in range(num_gat_layers - 1):
+            self.gat_layers.append(GATConv(hidden_channels * heads, hidden_channels, heads=heads, dropout=dropout))
+
+        # Output GAT layer
+        self.gat_layers.append(GATConv(hidden_channels * heads, out_channels, heads=1, concat=False, dropout=dropout))
+
+    def forward(self, x, edge_index):
+        for gcn_layer in self.gcn_layers:
+            x = gcn_layer(x, edge_index)
+            x = F.elu(x)
+        
+        for gat_layer in self.gat_layers[:-1]:
+            x = gat_layer(x, edge_index)
+            x = F.elu(x)
+
+        x = self.gat_layers[-1](x, edge_index)
+        return F.log_softmax(x, dim=1)
+
+# Custom Dataset
+class OCRDataset(Dataset):
+    def __init__(self, img_folder, ocr_folder, label_folder, emb_folder, generate_embeddings=True):
+        self.img_folder = img_folder
+        self.ocr_folder = ocr_folder
+        self.label_folder = label_folder
+        self.emb_folder = emb_folder
+        self.generate_embeddings = generate_embeddings
+        self.file_names = [f.split(".")[0] for f in os.listdir(ocr_folder) if f.endswith(".txt")]
+
+    def __len__(self):
+        return len(self.file_names)
+
+    def get_embeddings(self, text, file_name):
+        emb_path = os.path.join(self.emb_folder, file_name + ".pt")
+        if os.path.exists(emb_path):
+            embeddings = torch.load(emb_path)
+        else:
+            embeddings = get_text_embeddings(text)
+            torch.save(embeddings, emb_path)
+        return embeddings
+
+    def __getitem__(self, idx):
+        file_name = self.file_names[idx]
+        ocr_path = os.path.join(self.ocr_folder, file_name + ".txt")
+        label_path = os.path.join(self.label_folder, file_name + ".txt")
+
+        if not os.path.exists(ocr_path) or not os.path.exists(label_path):
+            print(f"Missing OCR or label data for file: {file_name}")
+            return None
+
+        # Read OCR data from the text file with error handling for encoding issues
+        ocr_data = []
+        try:
+            with open(ocr_path, "r", encoding="utf-8", errors="replace") as ocr_file:
+                for line in ocr_file:
+                    parts = line.strip().split(",")
+                    if len(parts) >= 9:
+                        bbox = list(map(int, parts[:8]))
+                        word = ",".join(parts[8:])
+                        ocr_data.append({"bbox": bbox, "word": word})
+        except UnicodeDecodeError:
+            print(f"UnicodeDecodeError encountered when reading {ocr_path}. Skipping file.")
+            return None
+
+        with open(label_path, "r", encoding="utf-8", errors="replace") as label_file:
+            labels = json.load(label_file)
+
+        words = []
+        bounding_boxes = []
+        for item in ocr_data:
+            words.append(item['word'])
+            bbox = item['bbox']
+            x_min = min(bbox[0], bbox[2], bbox[4], bbox[6])
+            y_min = min(bbox[1], bbox[3], bbox[5], bbox[7])
+            x_max = max(bbox[0], bbox[2], bbox[4], bbox[6])
+            y_max = max(bbox[1], bbox[3], bbox[5], bbox[7])
+            bounding_boxes.append([x_min, y_min, x_max, y_max])
+
+        if not words:
+            print(f"No words found in OCR data for file: {file_name}")
+            return None
+
+        # Generate embeddings for the concatenated text within each bounding box
+        text_embeddings = torch.cat([self.get_embeddings(word, f"{file_name}_{i}") for i, word in enumerate(words)], dim=0)
+        bounding_boxes = torch.tensor(bounding_boxes, dtype=torch.float).to(device)
+
+        pos_embedding_model = PositionalEmbedding(emb_size=128).to(device)
+        pos_embeddings = pos_embedding_model(bounding_boxes)
+
+        node_combiner = NodeFeatureCombiner(text_emb_size=768, pos_emb_size=128).to(device)
+        node_features = node_combiner(text_embeddings, pos_embeddings)  # No confidence scores
+
+        # Create edges based on spatial proximity in 2D space
+        edge_index = []
+
+
+        """
+        Threshold distance control Graph node generation
+
+        """
+        threshold_distance = 1000  # Adjust this threshold based on your requirement
+        for i in range(len(bounding_boxes)):
+            for j in range(i + 1, len(bounding_boxes)):
+                dist = np.linalg.norm(bounding_boxes[i, :2].cpu().numpy() - bounding_boxes[j, :2].cpu().numpy())
+                if dist < threshold_distance:
+                    edge_index.append([i, j])
+                    edge_index.append([j, i])
+        edge_index = torch.tensor(edge_index, dtype=torch.long).t().contiguous().to(device)
+
+        # Initialize all labels to the "other" category, if it exists
+        target_labels = torch.full((len(words),), label_dict.get("other", 0), dtype=torch.long).to(device)
+
+        # Assign node labels
+        for key in labels.keys():
+            if key in label_dict:
+                label_index = label_dict[key]
+                for i, word in enumerate(words):
+                    if labels[key] in word:  # Simple logic to assign labels based on presence in words
+                        target_labels[i] = label_index
+
+        data = Data(x=node_features, edge_index=edge_index, y=target_labels)
+
+        return data
+
+def prepare_data_loader(img_folder, ocr_folder, label_folder, emb_folder, batch_size=8, shuffle=True, generate_embeddings=True):
+    dataset = OCRDataset(img_folder, ocr_folder, label_folder, emb_folder, generate_embeddings)
+    
+    def collate_fn(batch):
+        batch = [data for data in batch if data is not None]
+        if len(batch) == 0:  # If all entries are None, return a dummy batch
+            return None
+        return DataLoader.collate_fn(batch)
+    
+    data_loader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, collate_fn=collate_fn)
+    return data_loader
+
+# Function to load the model
+def load_model(model_path, in_channels, hidden_channels, out_channels, num_gat_layers, num_gcn_layers, heads):
+    model = GCNGAT(in_channels=in_channels, hidden_channels=hidden_channels, out_channels=out_channels, num_gat_layers=num_gat_layers, num_gcn_layers=num_gcn_layers, heads=heads).to(device)
+    model.load_state_dict(torch.load(model_path))
+    model.eval()
+    return model
+
+def evaluate_model(model, data_loader):
+    model.eval()
+    y_true = []
+    y_pred = []
+
+    with torch.no_grad():
+        for batch in tqdm(data_loader, desc="Evaluating"):
+            if batch is None:
+                continue
+            batch = batch.to(device)
+            out = model(batch.x, batch.edge_index)
+            _, pred = out.max(dim=1)
+            y_true.extend(batch.y.cpu().numpy())
+            y_pred.extend(pred.cpu().numpy())
+
+    accuracy = accuracy_score(y_true, y_pred)
+    precision = precision_score(y_true, y_pred, average='weighted')
+    recall = recall_score(y_true, y_pred, average='weighted')
+    f1 = f1_score(y_true, y_pred, average='weighted')
+
+    print(f'Accuracy: {accuracy:.4f}')
+    print(f'Precision: {precision:.4f}')
+    print(f'Recall: {recall:.4f}')
+    print(f'F1 Score: {f1:.4f}')
+
+    # Print classification report
+    target_names = ["company", "date", "address", "total"]  # Ensure this matches the label_dict keys
+    print("\nClassification Report:")
+    print(classification_report(y_true, y_pred, target_names=target_names))
+
+# Save model summary function
+def save_model_summary(model, input_size, num_nodes, title, logs_folder):
+    # Create a dummy input for model summary
+    x = torch.randn((num_nodes, input_size)).to(device)
+    edge_index = torch.tensor([[0, 1], [1, 0]], dtype=torch.long).to(device)  # Dummy edge index
+    dummy_data = (x, edge_index)
+    
+    # Generate model summary
+    model_summary = summary(model, input_data=dummy_data, verbose=0)
+    
+    # Save model summary to file
+    with open(os.path.join(logs_folder, f"{title}_model_summary.txt"), "w") as f:
+        f.write(str(model_summary))
+
+def visualize_graph_and_image(graph_data, tokens, labels, image_path, ocr_text_path):
+    
+    # Convert the graph data to a NetworkX graph
+    G = to_networkx(graph_data, to_undirected=True)
+    pos = {i: (graph_data.x[i, -4].item(), graph_data.x[i, -3].item()) for i in range(graph_data.num_nodes)}
+
+    print(f"Number of nodes: {graph_data.num_nodes}")
+
+    # Load the original image
+    img = Image.open(image_path)
+    draw = ImageDraw.Draw(img)
+    
+    # Define a color map for different labels
+    color_map = {
+        0: 'red',        # company
+        1: 'green',      # date
+        2: 'blue',       # address
+        3: 'yellow',     # total
+        4: 'purple'      # other (if exists)
+    }
+    
+    # Load OCR data
+    ocr_data = []
+    with open(ocr_text_path, "r", encoding="utf-8", errors="replace") as ocr_file:
+        for line in ocr_file:
+            parts = line.strip().split(",")
+            if len(parts) >= 9:
+                bbox = list(map(int, parts[:8]))
+                word = ",".join(parts[8:])
+                ocr_data.append({"bbox": bbox, "word": word})
+
+    # Draw bounding boxes and annotations on the image
+    
+    for idx, item in enumerate(ocr_data):
+        bbox = item['bbox']
+        label = labels[idx]
+        word = item['word']
+        
+        x_min = min(bbox[0], bbox[2], bbox[4], bbox[6])
+        y_min = min(bbox[1], bbox[3], bbox[5], bbox[7])
+        x_max = max(bbox[0], bbox[2], bbox[4], bbox[6])
+        y_max = max(bbox[1], bbox[3], bbox[5], bbox[7])
+        
+        color = color_map.get(label, 'black')  # Default to black if label is not found
+        draw.rectangle([x_min, y_min, x_max, y_max], outline=color, width=2)
+        draw.text((x_min, y_min), f"{word} ({label})", fill=color)
+
+    # Display the image with bounding boxes
+    plt.figure(figsize=(20, 12))
+    plt.subplot(2, 2, 1)
+    plt.imshow(img)
+    plt.title("Original Image with Annotations")
+
+    # # Plot the graph representation with tokens as labels
+    # plt.subplot(2, 2, 2)
+    # nx.draw(G, pos, with_labels=True, labels={i: tokens[i] for i in pos.keys()}, node_size=500, node_color="skyblue", font_size=10, font_weight="bold", alpha=0.9)
+    # plt.title("Graph Representation with Tokens")
+
+    # Plot the graph representation with ground truth labels
+    plt.subplot(2, 2, 3)
+    nx.draw(G, pos, with_labels=True, labels={i: labels[i] for i in pos.keys()}, node_size=500, node_color="lightgreen", font_size=10, font_weight="bold", alpha=0.9)
+    plt.title("Graph Representation with Ground Truth Labels")
+
+    plt.tight_layout()
+    plt.show()
+
+def train_model(generate_embeddings=True):
+    train_loader = prepare_data_loader(img_folder, ocr_folder, label_folder, emb_folder, generate_embeddings=generate_embeddings, batch_size=8)
+    test_loader = prepare_data_loader(test_img_folder, test_ocr_folder, test_label_folder, test_emb_folder, shuffle=False, generate_embeddings=False)
+
+    # Update the output dimension to match the number of classes
+    num_classes = len(label_dict)
+    hidden_channels = 256
+    num_gcn_layers = 3
+    num_gat_layers = 3
+    heads = 8
+    model = GCNGAT(in_channels=896, hidden_channels=hidden_channels, out_channels=num_classes, num_gcn_layers=num_gcn_layers, num_gat_layers=num_gat_layers, heads=heads).to(device)
+    
+    # Log model summary to text file
+    save_model_summary(model, input_size=896, num_nodes=4, title="GCNGAT_Model", logs_folder=logs_folder)
+
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+    scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=10)
+    criterion = nn.CrossEntropyLoss()
+
+    scaler = GradScaler()
+
+    num_epochs = 50
+    model.train()
+
+    # Initialize TensorBoard SummaryWriter
+    writer = SummaryWriter(log_dir=logs_folder)
+
+    for epoch in range(num_epochs):
+        epoch_loss = 0
+        for batch in tqdm(train_loader, desc=f"Epoch {epoch+1}/{num_epochs}"):
+            if batch is None:
+                continue
+            batch = batch.to(device)
+            optimizer.zero_grad()
+            with autocast():
+                out = model(batch.x, batch.edge_index)
+                loss = criterion(out, batch.y)
+            scaler.scale(loss).backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+            scaler.step(optimizer)
+            scaler.update()
+            epoch_loss += loss.item()
+            for i, node_output in enumerate(out):
+                writer.add_scalar(f'Node Output/Node {i}', node_output.mean().item(), epoch)
+        print(f"Epoch {epoch+1}/{num_epochs}, Loss: {epoch_loss/len(train_loader):.4f}")
+        writer.add_scalar('Loss/train', epoch_loss/len(train_loader), epoch)
+        scheduler.step(epoch_loss/len(train_loader))
+
+    writer.close()
+
+    torch.save(model.state_dict(), model_save_path)
+    print(f'Model saved to {model_save_path}')
+
+    evaluate_model(model, test_loader)
+
+def visualize_batch():
+    test_loader = prepare_data_loader(test_img_folder, test_ocr_folder, test_label_folder, test_emb_folder, shuffle=False, generate_embeddings=False)
+    for batch in test_loader:
+        if batch is None:
+            continue
+        # Use .detach() before .cpu().numpy()
+        tokens = [word.detach().cpu().numpy() for word in batch.x[:, :-2]]
+        labels = batch.y.tolist()
+        image_path = os.path.join(test_img_folder, f"{test_loader.dataset.file_names[batch.batch[0].item()]}.jpg")
+        ocr_text_path = os.path.join(test_ocr_folder, f"{test_loader.dataset.file_names[batch.batch[0].item()]}.txt")
+        visualize_graph_and_image(batch, tokens, labels, image_path, ocr_text_path)
+        break  # Visualize only the first batch for brevity
+
+if __name__ == "__main__":
+    train_flag = True  # Set to True to train the model
+    visualize_flag = False  # Set to True to visualize the graph
+
+    if train_flag:
+        train_model(generate_embeddings=True)
+    
+    if visualize_flag:
+        visualize_batch()
+
+    if not train_flag and not visualize_flag:
+        test_loader = prepare_data_loader(test_img_folder, test_ocr_folder, test_label_folder, test_emb_folder, shuffle=False, generate_embeddings=False)
+        model = load_model(model_save_path, in_channels=896, hidden_channels=128, out_channels=len(label_dict), num_gcn_layers=3, num_gat_layers=3, heads=8)
+        evaluate_model(model, test_loader)

@@ -1,0 +1,434 @@
+Class counts: {'company': 648, 'date': 949, 'address': 449, 'total': 992, 'other': 12732}
+Model summary:
+===================================================================================================================
+Layer (type:depth-idx)                   Input Shape               Output Shape              Param #
+===================================================================================================================
+ConfigurableGNN                          [121, 776]                [121, 5]                  --
+├─ModuleList: 1-1                        --                        --                        --
+│    └─GCNConv: 2-1                      [121, 776]                [121, 5000]               5,000
+│    │    └─Linear: 3-1                  [121, 776]                [121, 5000]               3,880,000
+│    │    └─SumAggregation: 3-2          [238, 5000]               [121, 5000]               --
+│    └─GCNConv: 2-2                      [121, 5000]               [121, 5000]               5,000
+│    │    └─Linear: 3-3                  [121, 5000]               [121, 5000]               25,000,000
+│    │    └─SumAggregation: 3-4          [238, 5000]               [121, 5000]               --
+│    └─GCNConv: 2-3                      [121, 5000]               [121, 5000]               5,000
+│    │    └─Linear: 3-5                  [121, 5000]               [121, 5000]               25,000,000
+│    │    └─SumAggregation: 3-6          [238, 5000]               [121, 5000]               --
+├─ModuleList: 1-2                        --                        --                        --
+│    └─GATConv: 2-4                      [121, 5000]               [121, 5000]               45,000
+│    │    └─Linear: 3-7                  [121, 5000]               [121, 20000]              100,000,000
+│    │    └─SumAggregation: 3-8          [238, 4, 5000]            [121, 4, 5000]            --
+│    └─GATConv: 2-5                      [121, 5000]               [121, 5000]               45,000
+│    │    └─Linear: 3-9                  [121, 5000]               [121, 20000]              100,000,000
+│    │    └─SumAggregation: 3-10         [238, 4, 5000]            [121, 4, 5000]            --
+│    └─GATConv: 2-6                      [121, 5000]               [121, 5000]               45,000
+│    │    └─Linear: 3-11                 [121, 5000]               [121, 20000]              100,000,000
+│    │    └─SumAggregation: 3-12         [238, 4, 5000]            [121, 4, 5000]            --
+├─SpatialAttentionLayer: 1-3             [121, 5000]               [121, 5000]               --
+│    └─Linear: 2-7                       [121, 5000]               [121, 5000]               25,005,000
+│    └─Linear: 2-8                       [121, 5000]               [121, 5000]               25,005,000
+│    └─Linear: 2-9                       [121, 5000]               [121, 5000]               25,005,000
+├─Linear: 1-4                            [121, 5000]               [121, 5]                  25,005
+===================================================================================================================
+Total params: 429,070,005
+Trainable params: 429,070,005
+Non-trainable params: 0
+Total mult-adds (Units.GIGABYTES): 51.90
+===================================================================================================================
+Input size (MB): 0.38
+Forward/backward pass size (MB): 87.12
+Params size (MB): 1715.68
+Estimated Total Size (MB): 1803.18
+===================================================================================================================
+Epoch: 1, Loss: 0.9078151509165764, Accuracy: 0.787571337983513, ETA: 0.55 hours
+Epoch: 2, Loss: 0.8537750176408074, Accuracy: 0.8027901077996196, ETA: 0.55 hours
+Epoch: 3, Loss: 0.807506203990091, Accuracy: 0.8069752694990489, ETA: 0.55 hours
+Epoch: 4, Loss: 0.773097231306813, Accuracy: 0.8067850348763475, ETA: 0.54 hours
+Epoch: 5, Loss: 0.7549243335696784, Accuracy: 0.8070386810399492, ETA: 0.54 hours
+Epoch: 6, Loss: 0.7426318851384249, Accuracy: 0.8082435003170577, ETA: 0.54 hours
+Epoch: 7, Loss: 0.7693994878367945, Accuracy: 0.8074825618262523, ETA: 0.54 hours
+Epoch: 8, Loss: 0.7333112230355089, Accuracy: 0.8081166772352568, ETA: 0.53 hours
+Epoch: 9, Loss: 0.7214873294261369, Accuracy: 0.8082435003170577, ETA: 0.53 hours
+Epoch: 10, Loss: 0.7042292061854493, Accuracy: 0.810716550412175, ETA: 0.53 hours
+Epoch: 11, Loss: 0.6966870423745025, Accuracy: 0.8095117311350666, ETA: 0.53 hours
+Epoch: 12, Loss: 0.6922231103208932, Accuracy: 0.8121750158528852, ETA: 0.52 hours
+Epoch: 13, Loss: 0.6846160797232931, Accuracy: 0.8120481927710843, ETA: 0.52 hours
+Epoch: 14, Loss: 0.6845105574889616, Accuracy: 0.8115409004438808, ETA: 0.52 hours
+Epoch: 15, Loss: 0.6936952884901654, Accuracy: 0.8135066582117946, ETA: 0.52 hours
+Epoch: 16, Loss: 0.6738334281200712, Accuracy: 0.8133798351299937, ETA: 0.51 hours
+Epoch: 17, Loss: 0.6784321814775467, Accuracy: 0.8132530120481928, ETA: 0.51 hours
+Epoch: 18, Loss: 0.6765437874604355, Accuracy: 0.8119847812301839, ETA: 0.51 hours
+Epoch: 19, Loss: 0.6759035800668326, Accuracy: 0.8155358275206087, ETA: 0.51 hours
+Epoch: 20, Loss: 0.6780835085294463, Accuracy: 0.8162967660114141, ETA: 0.50 hours
+Epoch: 21, Loss: 0.6689161458476023, Accuracy: 0.8161699429296132, ETA: 0.50 hours
+Epoch: 22, Loss: 0.6627145328304984, Accuracy: 0.8156626506024096, ETA: 0.50 hours
+Epoch: 23, Loss: 0.6565927551551298, Accuracy: 0.816994292961319, ETA: 0.50 hours
+Epoch: 24, Loss: 0.6655147651379759, Accuracy: 0.8149017121116043, ETA: 0.49 hours
+Epoch: 25, Loss: 0.6578384576873346, Accuracy: 0.816423589093215, ETA: 0.49 hours
+Epoch: 26, Loss: 0.661758542060852, Accuracy: 0.8149017121116043, ETA: 0.49 hours
+Epoch: 27, Loss: 0.6536967791616917, Accuracy: 0.8160431198478123, ETA: 0.49 hours
+Epoch: 28, Loss: 0.6583733941343698, Accuracy: 0.8181991122384273, ETA: 0.48 hours
+Epoch: 29, Loss: 0.6532736766067418, Accuracy: 0.8162333544705136, ETA: 0.48 hours
+Epoch: 30, Loss: 0.6430952779271386, Accuracy: 0.8167406467977172, ETA: 0.48 hours
+Epoch: 31, Loss: 0.6505133458836512, Accuracy: 0.8169308814204185, ETA: 0.48 hours
+Epoch: 32, Loss: 0.6360431323674592, Accuracy: 0.8177552314521243, ETA: 0.47 hours
+Epoch: 33, Loss: 0.6432134570045904, Accuracy: 0.8170577045022194, ETA: 0.47 hours
+Epoch: 34, Loss: 0.6431803727014498, Accuracy: 0.8172479391249208, ETA: 0.47 hours
+Epoch: 35, Loss: 0.6484669142148711, Accuracy: 0.816994292961319, ETA: 0.47 hours
+Epoch: 36, Loss: 0.6318733143535528, Accuracy: 0.8173113506658212, ETA: 0.46 hours
+Epoch: 37, Loss: 0.6392057873308659, Accuracy: 0.8182625237793278, ETA: 0.46 hours
+Epoch: 38, Loss: 0.631421744484793, Accuracy: 0.816994292961319, ETA: 0.46 hours
+Epoch: 39, Loss: 0.6263796592300589, Accuracy: 0.8160431198478123, ETA: 0.45 hours
+Epoch: 40, Loss: 0.6253078678114847, Accuracy: 0.8183893468611287, ETA: 0.45 hours
+Epoch: 41, Loss: 0.6160198267210614, Accuracy: 0.8192136968928345, ETA: 0.45 hours
+Epoch: 42, Loss: 0.609373441812667, Accuracy: 0.8201014584654407, ETA: 0.45 hours
+Epoch: 43, Loss: 0.6121217334135012, Accuracy: 0.8198478123018389, ETA: 0.44 hours
+Epoch: 44, Loss: 0.6082671718163923, Accuracy: 0.8190868738110336, ETA: 0.44 hours
+Epoch: 45, Loss: 0.6119195063683119, Accuracy: 0.8188966391883323, ETA: 0.44 hours
+Epoch: 46, Loss: 0.5986203805289485, Accuracy: 0.8194673430564363, ETA: 0.44 hours
+Epoch: 47, Loss: 0.6024855568327687, Accuracy: 0.8220672162333544, ETA: 0.43 hours
+Epoch: 48, Loss: 0.6027561588720842, Accuracy: 0.8209258084971465, ETA: 0.43 hours
+Epoch: 49, Loss: 0.5972914231771772, Accuracy: 0.819720989220038, ETA: 0.43 hours
+Epoch: 50, Loss: 0.5843013023788278, Accuracy: 0.8218135700697526, ETA: 0.42 hours
+Epoch: 51, Loss: 0.5979837605899031, Accuracy: 0.8234622701331642, ETA: 0.42 hours
+Epoch: 52, Loss: 0.5824515548619357, Accuracy: 0.8230818008877616, ETA: 0.42 hours
+Epoch: 53, Loss: 0.5812961120497097, Accuracy: 0.8258719086873811, ETA: 0.42 hours
+Epoch: 54, Loss: 0.5733828236433592, Accuracy: 0.8232086239695625, ETA: 0.41 hours
+Epoch: 55, Loss: 0.5692422677847472, Accuracy: 0.8256182625237793, ETA: 0.41 hours
+Epoch: 56, Loss: 0.5651251856576313, Accuracy: 0.8246670894102727, ETA: 0.41 hours
+Epoch: 57, Loss: 0.5600540113042701, Accuracy: 0.8298034242232086, ETA: 0.40 hours
+Epoch: 58, Loss: 0.5528308955783193, Accuracy: 0.8294863665187064, ETA: 0.40 hours
+Epoch: 59, Loss: 0.544166387482123, Accuracy: 0.8306277742549144, ETA: 0.40 hours
+Epoch: 60, Loss: 0.5691318806599487, Accuracy: 0.8258084971464806, ETA: 0.40 hours
+Epoch: 61, Loss: 0.5542704618789933, Accuracy: 0.8310082435003171, ETA: 0.39 hours
+Epoch: 62, Loss: 0.5375505052506924, Accuracy: 0.828281547241598, ETA: 0.39 hours
+Epoch: 63, Loss: 0.5393229624764486, Accuracy: 0.8315789473684211, ETA: 0.39 hours
+Epoch: 64, Loss: 0.5408340113406832, Accuracy: 0.8306277742549144, ETA: 0.39 hours
+Epoch: 65, Loss: 0.5362266850742426, Accuracy: 0.8337349397590361, ETA: 0.38 hours
+Epoch: 66, Loss: 0.5176844485104084, Accuracy: 0.8329740012682308, ETA: 0.38 hours
+Epoch: 67, Loss: 0.5185945037413727, Accuracy: 0.8337349397590361, ETA: 0.38 hours
+Epoch: 68, Loss: 0.5099047899923541, Accuracy: 0.8363348129359544, ETA: 0.37 hours
+Epoch: 69, Loss: 0.49239602515643294, Accuracy: 0.8393785668991757, ETA: 0.37 hours
+Epoch: 70, Loss: 0.48218682916326955, Accuracy: 0.8386810399492708, ETA: 0.37 hours
+Epoch: 71, Loss: 0.49351407892324706, Accuracy: 0.8399492707672797, ETA: 0.37 hours
+Epoch: 72, Loss: 0.4971392530609261, Accuracy: 0.8374128091312619, ETA: 0.36 hours
+Epoch: 73, Loss: 0.4896952858702703, Accuracy: 0.8396322130627775, ETA: 0.36 hours
+Epoch: 74, Loss: 0.46342200074683537, Accuracy: 0.8438807863031071, ETA: 0.36 hours
+Epoch: 75, Loss: 0.47690314935012296, Accuracy: 0.841851616994293, ETA: 0.35 hours
+Epoch: 76, Loss: 0.49559719928286294, Accuracy: 0.8390615091946735, ETA: 0.35 hours
+Epoch: 77, Loss: 0.4693122794005004, Accuracy: 0.8438173747622068, ETA: 0.35 hours
+Epoch: 78, Loss: 0.42911863631822844, Accuracy: 0.8511731135066583, ETA: 0.35 hours
+Epoch: 79, Loss: 0.4126544821668755, Accuracy: 0.8561826252377933, ETA: 0.34 hours
+Epoch: 80, Loss: 0.40704158202491025, Accuracy: 0.856436271401395, ETA: 0.34 hours
+Epoch: 81, Loss: 0.4117519742047245, Accuracy: 0.8563094483195942, ETA: 0.34 hours
+Epoch: 82, Loss: 0.3972130407663909, Accuracy: 0.8614457831325302, ETA: 0.33 hours
+Epoch: 83, Loss: 0.38029475865716283, Accuracy: 0.8642358909321497, ETA: 0.33 hours
+Epoch: 84, Loss: 0.40376049076968973, Accuracy: 0.8623335447051363, ETA: 0.33 hours
+Epoch: 85, Loss: 0.5233138992705129, Accuracy: 0.8331008243500317, ETA: 0.33 hours
+Epoch: 86, Loss: 0.443734206428582, Accuracy: 0.8492073557387444, ETA: 0.32 hours
+Epoch: 87, Loss: 0.38476047377017414, Accuracy: 0.8628408370323399, ETA: 0.32 hours
+Epoch: 88, Loss: 0.3635489876297387, Accuracy: 0.8667089410272669, ETA: 0.32 hours
+Epoch: 89, Loss: 0.36850930835035717, Accuracy: 0.8684844641724794, ETA: 0.31 hours
+Epoch: 90, Loss: 0.33747739463367243, Accuracy: 0.8781864299302473, ETA: 0.31 hours
+Epoch: 91, Loss: 0.35518121431497013, Accuracy: 0.8738110336081166, ETA: 0.31 hours
+Epoch: 92, Loss: 0.37218917736952956, Accuracy: 0.8642993024730501, ETA: 0.31 hours
+Epoch: 93, Loss: 0.3803957768461921, Accuracy: 0.8675332910589727, ETA: 0.30 hours
+Epoch: 94, Loss: 0.4304386421360753, Accuracy: 0.8528852251109702, ETA: 0.30 hours
+Epoch: 95, Loss: 0.3355538531799208, Accuracy: 0.8748890298034242, ETA: 0.30 hours
+Epoch: 96, Loss: 0.30972026085311716, Accuracy: 0.8856055802155992, ETA: 0.29 hours
+Epoch: 97, Loss: 0.28619419495490467, Accuracy: 0.8876347495244135, ETA: 0.29 hours
+Epoch: 98, Loss: 0.3035315712067214, Accuracy: 0.8899175649968294, ETA: 0.29 hours
+Epoch: 99, Loss: 0.45572634820233693, Accuracy: 0.8719720989220038, ETA: 0.29 hours
+Epoch: 100, Loss: 0.2959165767851201, Accuracy: 0.8886493341788205, ETA: 0.28 hours
+Epoch: 101, Loss: 0.2658260433341969, Accuracy: 0.8968928344958782, ETA: 0.28 hours
+Epoch: 102, Loss: 0.3056366809389808, Accuracy: 0.890424857324033, ETA: 0.28 hours
+Epoch: 103, Loss: 0.25070169381797314, Accuracy: 0.905136334812936, ETA: 0.28 hours
+Epoch: 104, Loss: 0.23038022567264058, Accuracy: 0.9088776157260622, ETA: 0.27 hours
+Epoch: 105, Loss: 0.25585562066937034, Accuracy: 0.9029169308814204, ETA: 0.27 hours
+Epoch: 106, Loss: 0.22005664599551397, Accuracy: 0.9132530120481928, ETA: 0.27 hours
+Epoch: 107, Loss: 0.2762887670065869, Accuracy: 0.8993658845909955, ETA: 0.26 hours
+Epoch: 108, Loss: 0.3396113250743259, Accuracy: 0.8770450221940393, ETA: 0.26 hours
+Epoch: 109, Loss: 0.3148760727860711, Accuracy: 0.8878249841471147, ETA: 0.26 hours
+Epoch: 110, Loss: 0.2595800027589906, Accuracy: 0.9032974001268231, ETA: 0.26 hours
+Epoch: 111, Loss: 0.2408084109086882, Accuracy: 0.9095751426759671, ETA: 0.25 hours
+Epoch: 112, Loss: 0.24216779846359382, Accuracy: 0.9091312618896639, ETA: 0.25 hours
+Epoch: 113, Loss: 0.24160576848821205, Accuracy: 0.907292327203551, ETA: 0.25 hours
+Epoch: 114, Loss: 0.1778982373123819, Accuracy: 0.928154724159797, ETA: 0.24 hours
+Epoch: 115, Loss: 0.17696841035715558, Accuracy: 0.9292327203551046, ETA: 0.24 hours
+Epoch: 116, Loss: 0.23146487518467687, Accuracy: 0.912999365884591, ETA: 0.24 hours
+Epoch: 117, Loss: 0.19404334905134005, Accuracy: 0.9243500317057705, ETA: 0.24 hours
+Epoch: 118, Loss: 0.3012797326188196, Accuracy: 0.8894102726696259, ETA: 0.23 hours
+Epoch: 119, Loss: 0.2614277249032801, Accuracy: 0.8993658845909955, ETA: 0.23 hours
+Epoch: 120, Loss: 0.18287723265926947, Accuracy: 0.9279010779961953, ETA: 0.23 hours
+Epoch: 121, Loss: 0.14927732715891165, Accuracy: 0.9393151553582753, ETA: 0.22 hours
+Epoch: 122, Loss: 0.13550170900469477, Accuracy: 0.9461001902346227, ETA: 0.22 hours
+Epoch: 123, Loss: 0.14928688904778523, Accuracy: 0.9398858592263792, ETA: 0.22 hours
+Epoch: 124, Loss: 0.15830451681871305, Accuracy: 0.9360177552314521, ETA: 0.22 hours
+Epoch: 125, Loss: 0.1488469028422101, Accuracy: 0.942422320862397, ETA: 0.21 hours
+Epoch: 126, Loss: 0.13461794704198837, Accuracy: 0.9450221940393152, ETA: 0.21 hours
+Epoch: 127, Loss: 0.1555014897815206, Accuracy: 0.9391249207355739, ETA: 0.21 hours
+Epoch: 128, Loss: 0.14526066645471888, Accuracy: 0.9426125554850983, ETA: 0.20 hours
+Epoch: 129, Loss: 0.18861538277600298, Accuracy: 0.9276474318325936, ETA: 0.20 hours
+Epoch: 130, Loss: 0.157098848330365, Accuracy: 0.9370957514267597, ETA: 0.20 hours
+Epoch: 131, Loss: 0.19507328598675402, Accuracy: 0.9298668357641091, ETA: 0.20 hours
+Epoch: 132, Loss: 0.1675948001952334, Accuracy: 0.934432466708941, ETA: 0.19 hours
+Epoch: 133, Loss: 0.16147132107818668, Accuracy: 0.9390615091946735, ETA: 0.19 hours
+Epoch: 134, Loss: 0.11889568144794214, Accuracy: 0.9530120481927711, ETA: 0.19 hours
+Epoch: 135, Loss: 0.1660974779250947, Accuracy: 0.937285986049461, ETA: 0.18 hours
+Epoch: 136, Loss: 0.19361638692630964, Accuracy: 0.9272669625871909, ETA: 0.18 hours
+Epoch: 137, Loss: 0.13258552479303695, Accuracy: 0.9478123018389347, ETA: 0.18 hours
+Epoch: 138, Loss: 0.13521185254847462, Accuracy: 0.9471147748890298, ETA: 0.18 hours
+Epoch: 139, Loss: 0.10300258195705035, Accuracy: 0.9585288522511097, ETA: 0.17 hours
+Epoch: 140, Loss: 0.10315928354182026, Accuracy: 0.9594800253646164, ETA: 0.17 hours
+Epoch: 141, Loss: 0.22108527016825974, Accuracy: 0.9276474318325936, ETA: 0.17 hours
+Epoch: 142, Loss: 0.1886751286854798, Accuracy: 0.9289790741915028, ETA: 0.16 hours
+Epoch: 143, Loss: 0.13783104937862267, Accuracy: 0.9460367786937223, ETA: 0.16 hours
+Epoch: 144, Loss: 0.18193504959344864, Accuracy: 0.9336715282181357, ETA: 0.16 hours
+Epoch: 145, Loss: 0.17521059775555675, Accuracy: 0.9356372859860494, ETA: 0.16 hours
+Epoch: 146, Loss: 0.17362411523407156, Accuracy: 0.9340519974635384, ETA: 0.15 hours
+Epoch: 147, Loss: 0.149796837432818, Accuracy: 0.9413443246670894, ETA: 0.15 hours
+Epoch: 148, Loss: 0.12392095137726176, Accuracy: 0.9521242866201649, ETA: 0.15 hours
+Epoch: 149, Loss: 0.0954121476970613, Accuracy: 0.9617628408370323, ETA: 0.14 hours
+Epoch: 150, Loss: 0.09161562128627504, Accuracy: 0.9629042485732403, ETA: 0.14 hours
+Epoch: 151, Loss: 0.07656735116192563, Accuracy: 0.9707672796448954, ETA: 0.14 hours
+Epoch: 152, Loss: 0.08120273803995753, Accuracy: 0.9683576410906785, ETA: 0.14 hours
+Epoch: 153, Loss: 0.12174900917505677, Accuracy: 0.9526949904882689, ETA: 0.13 hours
+Epoch: 154, Loss: 0.08991065623492679, Accuracy: 0.9649334178820546, ETA: 0.13 hours
+Epoch: 155, Loss: 0.1621133332902735, Accuracy: 0.9410272669625872, ETA: 0.13 hours
+Epoch: 156, Loss: 0.1414502702907405, Accuracy: 0.9471147748890298, ETA: 0.12 hours
+Epoch: 157, Loss: 0.15373325132002885, Accuracy: 0.9414711477488903, ETA: 0.12 hours
+Epoch: 158, Loss: 0.12744839091531254, Accuracy: 0.9512365250475586, ETA: 0.12 hours
+Epoch: 159, Loss: 0.1290745876560157, Accuracy: 0.9515535827520609, ETA: 0.12 hours
+Epoch: 160, Loss: 0.09784573566337879, Accuracy: 0.9612555485098287, ETA: 0.11 hours
+Epoch: 161, Loss: 0.11471721779724414, Accuracy: 0.9556119213696893, ETA: 0.11 hours
+Epoch: 162, Loss: 0.1614597489295358, Accuracy: 0.9442612555485098, ETA: 0.11 hours
+Epoch: 163, Loss: 0.16061043481088497, Accuracy: 0.9402029169308814, ETA: 0.11 hours
+Epoch: 164, Loss: 0.12058654622259465, Accuracy: 0.9551680405833862, ETA: 0.10 hours
+Epoch: 165, Loss: 0.1664292421615259, Accuracy: 0.9426759670259988, ETA: 0.10 hours
+Epoch: 166, Loss: 0.14874526178887623, Accuracy: 0.9465440710209259, ETA: 0.10 hours
+Epoch: 167, Loss: 0.09371175077235834, Accuracy: 0.9629676601141408, ETA: 0.09 hours
+Epoch: 168, Loss: 0.058204020828601315, Accuracy: 0.9795180722891567, ETA: 0.09 hours
+Epoch: 169, Loss: 0.066279161171141, Accuracy: 0.9742549143944198, ETA: 0.09 hours
+Epoch: 170, Loss: 0.056244318701580844, Accuracy: 0.9778693722257451, ETA: 0.09 hours
+Epoch: 171, Loss: 0.09010107144290073, Accuracy: 0.9663918833227647, ETA: 0.08 hours
+Epoch: 172, Loss: 0.12296410040421919, Accuracy: 0.9523779327837667, ETA: 0.08 hours
+Epoch: 173, Loss: 0.08804936622354118, Accuracy: 0.9661382371591629, ETA: 0.08 hours
+Epoch: 174, Loss: 0.08579609026624398, Accuracy: 0.9665821179454661, ETA: 0.07 hours
+Epoch: 175, Loss: 0.06407061261548237, Accuracy: 0.9734939759036144, ETA: 0.07 hours
+Epoch: 176, Loss: 0.06763188904997977, Accuracy: 0.9727330374128091, ETA: 0.07 hours
+Epoch: 177, Loss: 0.10393833938393403, Accuracy: 0.9588459099556119, ETA: 0.07 hours
+Epoch: 178, Loss: 0.11278478987514973, Accuracy: 0.9588459099556119, ETA: 0.06 hours
+Epoch: 179, Loss: 0.11606024747545068, Accuracy: 0.9564996829422955, ETA: 0.06 hours
+Epoch: 180, Loss: 0.17810951833697883, Accuracy: 0.9448953709575143, ETA: 0.06 hours
+Epoch: 181, Loss: 0.17955151670189065, Accuracy: 0.938998097653773, ETA: 0.05 hours
+Epoch: 182, Loss: 0.09117347302592614, Accuracy: 0.9660114140773621, ETA: 0.05 hours
+Epoch: 183, Loss: 0.0702526221496307, Accuracy: 0.9737476220672162, ETA: 0.05 hours
+Epoch: 184, Loss: 0.0659198480002074, Accuracy: 0.9752694990488269, ETA: 0.05 hours
+Epoch: 185, Loss: 0.06695079361088574, Accuracy: 0.972415979708307, ETA: 0.04 hours
+Epoch: 186, Loss: 0.08200256981548261, Accuracy: 0.9697526949904882, ETA: 0.04 hours
+Epoch: 187, Loss: 0.05731348603413525, Accuracy: 0.9776157260621433, ETA: 0.04 hours
+Epoch: 188, Loss: 0.06726755291244692, Accuracy: 0.9739378566899176, ETA: 0.03 hours
+Epoch: 189, Loss: 0.06526358987585726, Accuracy: 0.9752694990488269, ETA: 0.03 hours
+Epoch: 190, Loss: 0.05004181122322651, Accuracy: 0.980722891566265, ETA: 0.03 hours
+Epoch: 191, Loss: 0.06274840625172312, Accuracy: 0.9755231452124287, ETA: 0.03 hours
+Epoch: 192, Loss: 0.1128139205022969, Accuracy: 0.9603677869372226, ETA: 0.02 hours
+Epoch: 193, Loss: 0.15388006043874405, Accuracy: 0.9432466708941027, ETA: 0.02 hours
+Epoch: 194, Loss: 0.08757928299548273, Accuracy: 0.967850348763475, ETA: 0.02 hours
+Epoch: 195, Loss: 0.0872379270255227, Accuracy: 0.9672162333544705, ETA: 0.01 hours
+Epoch: 196, Loss: 0.052399316876703364, Accuracy: 0.9800253646163601, ETA: 0.01 hours
+Epoch: 197, Loss: 0.03932276783267629, Accuracy: 0.9844641724793912, ETA: 0.01 hours
+Epoch: 198, Loss: 0.04218947259571657, Accuracy: 0.983132530120482, ETA: 0.01 hours
+Epoch: 199, Loss: 0.07230347525116733, Accuracy: 0.9747622067216233, ETA: 0.00 hours
+Epoch: 200, Loss: 0.0766915108225393, Accuracy: 0.971845275840203, ETA: 0.00 hours
+Epoch: 20
+Evaluation Loss: 0.6698005216365511
+Accuracy: 0.8166772352568168
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.82      0.28      0.42       648
+        date       0.00      0.00      0.00       949
+     address       0.36      0.02      0.04       449
+       total       0.00      0.00      0.00       992
+       other       0.82      1.00      0.90     12732
+
+    accuracy                           0.82     15770
+   macro avg       0.40      0.26      0.27     15770
+weighted avg       0.70      0.82      0.74     15770
+
+Epoch: 40
+Evaluation Loss: 0.6060939021408558
+Accuracy: 0.819720989220038
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.66      0.42      0.51       648
+        date       0.54      0.06      0.11       949
+     address       0.58      0.02      0.05       449
+       total       0.00      0.00      0.00       992
+       other       0.83      0.99      0.90     12732
+
+    accuracy                           0.82     15770
+   macro avg       0.52      0.30      0.31     15770
+weighted avg       0.74      0.82      0.76     15770
+
+Epoch: 60
+Evaluation Loss: 0.5660042098977349
+Accuracy: 0.8283449587824984
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.71      0.46      0.56       648
+        date       0.52      0.26      0.35       949
+     address       0.48      0.11      0.18       449
+       total       0.56      0.01      0.02       992
+       other       0.84      0.98      0.91     12732
+
+    accuracy                           0.83     15770
+   macro avg       0.62      0.36      0.40     15770
+weighted avg       0.79      0.83      0.78     15770
+
+Epoch: 80
+Evaluation Loss: 0.38246091235090385
+Accuracy: 0.8639822447685479
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.83      0.52      0.64       648
+        date       0.76      0.48      0.59       949
+     address       0.73      0.31      0.44       449
+       total       0.74      0.22      0.34       992
+       other       0.87      0.98      0.92     12732
+
+    accuracy                           0.86     15770
+   macro avg       0.79      0.50      0.59     15770
+weighted avg       0.85      0.86      0.84     15770
+
+Epoch: 100
+Evaluation Loss: 0.247839708219875
+Accuracy: 0.9043119847812302
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.86      0.65      0.74       648
+        date       0.83      0.70      0.76       949
+     address       0.79      0.56      0.65       449
+       total       0.83      0.49      0.62       992
+       other       0.92      0.98      0.95     12732
+
+    accuracy                           0.90     15770
+   macro avg       0.84      0.67      0.74     15770
+weighted avg       0.90      0.90      0.90     15770
+
+Epoch: 120
+Evaluation Loss: 0.1428207414732738
+Accuracy: 0.9450221940393152
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.84      0.86      0.85       648
+        date       0.88      0.88      0.88       949
+     address       0.87      0.81      0.84       449
+       total       0.93      0.69      0.79       992
+       other       0.96      0.98      0.97     12732
+
+    accuracy                           0.95     15770
+   macro avg       0.90      0.84      0.87     15770
+weighted avg       0.94      0.95      0.94     15770
+
+Epoch: 140
+Evaluation Loss: 0.08860160424162379
+Accuracy: 0.9674698795180723
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.95      0.89      0.92       648
+        date       0.92      0.91      0.91       949
+     address       0.89      0.92      0.90       449
+       total       0.88      0.93      0.90       992
+       other       0.98      0.98      0.98     12732
+
+    accuracy                           0.97     15770
+   macro avg       0.93      0.92      0.92     15770
+weighted avg       0.97      0.97      0.97     15770
+
+Epoch: 160
+Evaluation Loss: 0.120823762294921
+Accuracy: 0.9551680405833862
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.85      0.84      0.85       648
+        date       0.92      0.90      0.91       949
+     address       0.82      0.77      0.79       449
+       total       0.93      0.83      0.88       992
+       other       0.97      0.98      0.98     12732
+
+    accuracy                           0.96     15770
+   macro avg       0.90      0.87      0.88     15770
+weighted avg       0.95      0.96      0.95     15770
+
+Epoch: 180
+Evaluation Loss: 0.3533874318342317
+Accuracy: 0.8899175649968294
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.67      0.81      0.73       648
+        date       0.73      0.69      0.71       949
+     address       0.82      0.61      0.70       449
+       total       0.80      0.41      0.54       992
+       other       0.92      0.96      0.94     12732
+
+    accuracy                           0.89     15770
+   macro avg       0.79      0.69      0.72     15770
+weighted avg       0.89      0.89      0.88     15770
+
+Epoch: 200
+Evaluation Loss: 0.10860859430712563
+Accuracy: 0.9610019023462271
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.86      0.96      0.91       648
+        date       0.92      0.92      0.92       949
+     address       0.88      0.97      0.92       449
+       total       0.92      0.77      0.84       992
+       other       0.98      0.98      0.98     12732
+
+    accuracy                           0.96     15770
+   macro avg       0.91      0.92      0.91     15770
+weighted avg       0.96      0.96      0.96     15770
+
+Final Evaluation Loss: 0.10959034564439207, Accuracy: 0.9610019023462271
+Final Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.86      0.96      0.91       648
+        date       0.92      0.92      0.92       949
+     address       0.88      0.97      0.92       449
+       total       0.92      0.77      0.84       992
+       other       0.98      0.98      0.98     12732
+
+    accuracy                           0.96     15770
+   macro avg       0.91      0.92      0.91     15770
+weighted avg       0.96      0.96      0.96     15770
+
+Test Loss: 2.108882729823773, Test Accuracy: 0.7802213807165744
+Test Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.47      0.49      0.48       296
+        date       0.38      0.26      0.31       425
+     address       0.27      0.24      0.25       209
+       total       0.23      0.10      0.14       419
+       other       0.85      0.91      0.88      5517
+
+    accuracy                           0.78      6866
+   macro avg       0.44      0.40      0.41      6866
+weighted avg       0.75      0.78      0.76      6866
+
+Model saved to logs/20240809_173838/invoice_gnn.pth
+Model parameters saved to logs/20240809_173838/model_params.txt
+Errors logged.
+Percentage of erroneous files: 0.00%

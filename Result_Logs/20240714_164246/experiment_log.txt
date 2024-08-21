@@ -1,0 +1,924 @@
+Class counts: {'company': 530, 'date': 635, 'address': 1233, 'total': 1341, 'other': 24088}
+Model summary:
+===================================================================================================================
+Layer (type:depth-idx)                   Input Shape               Output Shape              Param #
+===================================================================================================================
+ConfigurableGNN                          [229, 776]                [229, 5]                  --
+├─ModuleList: 1-1                        --                        --                        --
+│    └─GCNConv: 2-1                      [229, 776]                [229, 768]                768
+│    │    └─Linear: 3-1                  [229, 776]                [229, 768]                595,968
+│    │    └─SumAggregation: 3-2          [454, 768]                [229, 768]                --
+│    └─GCNConv: 2-2                      [229, 768]                [229, 768]                768
+│    │    └─Linear: 3-3                  [229, 768]                [229, 768]                589,824
+│    │    └─SumAggregation: 3-4          [454, 768]                [229, 768]                --
+│    └─GCNConv: 2-3                      [229, 768]                [229, 768]                768
+│    │    └─Linear: 3-5                  [229, 768]                [229, 768]                589,824
+│    │    └─SumAggregation: 3-6          [454, 768]                [229, 768]                --
+├─ModuleList: 1-2                        --                        --                        --
+│    └─GATConv: 2-4                      [229, 768]                [229, 768]                2,304
+│    │    └─Linear: 3-7                  [229, 768]                [229, 768]                589,824
+│    │    └─SumAggregation: 3-8          [454, 1, 768]             [229, 1, 768]             --
+│    └─GATConv: 2-5                      [229, 768]                [229, 768]                2,304
+│    │    └─Linear: 3-9                  [229, 768]                [229, 768]                589,824
+│    │    └─SumAggregation: 3-10         [454, 1, 768]             [229, 1, 768]             --
+│    └─GATConv: 2-6                      [229, 768]                [229, 768]                2,304
+│    │    └─Linear: 3-11                 [229, 768]                [229, 768]                589,824
+│    │    └─SumAggregation: 3-12         [454, 1, 768]             [229, 1, 768]             --
+├─SpatialAttentionLayer: 1-3             [229, 768]                [229, 768]                --
+│    └─Linear: 2-7                       [229, 768]                [229, 768]                590,592
+│    └─Linear: 2-8                       [229, 768]                [229, 768]                590,592
+│    └─Linear: 2-9                       [229, 768]                [229, 768]                590,592
+├─Linear: 1-4                            [229, 768]                [229, 5]                  3,845
+===================================================================================================================
+Total params: 5,329,925
+Trainable params: 5,329,925
+Non-trainable params: 0
+Total mult-adds (Units.GIGABYTES): 1.22
+===================================================================================================================
+Input size (MB): 0.71
+Forward/backward pass size (MB): 12.67
+Params size (MB): 21.28
+Estimated Total Size (MB): 34.67
+===================================================================================================================
+Epoch: 20, Loss: 0.4260206190190574, Accuracy: 0.865598160060373
+Epoch: 40, Loss: 0.4222671516643938, Accuracy: 0.8698745822402703
+Epoch: 60, Loss: 0.33692913415820097, Accuracy: 0.8880224242642039
+Epoch: 80, Loss: 0.30280575144660565, Accuracy: 0.894347216731951
+Epoch: 100, Loss: 0.2859302566264027, Accuracy: 0.898300212024293
+Epoch: 120, Loss: 0.2524487421263096, Accuracy: 0.9030078700542639
+Epoch: 140, Loss: 0.2532011991900991, Accuracy: 0.9022532073166349
+Epoch: 160, Loss: 0.22479243420584258, Accuracy: 0.9093685988428505
+Epoch: 180, Loss: 0.2158263465461805, Accuracy: 0.9111294785639846
+Epoch: 200, Loss: 0.199238145074179, Accuracy: 0.915190282818845
+Epoch: 220, Loss: 0.1981588272276775, Accuracy: 0.9140403205519819
+Epoch: 240, Loss: 0.19375721411418545, Accuracy: 0.9161605634815108
+Epoch: 260, Loss: 0.1807487682663193, Accuracy: 0.9220541200991842
+Epoch: 280, Loss: 0.16474643522916838, Accuracy: 0.9248930894455025
+Epoch: 300, Loss: 0.15824614424807157, Accuracy: 0.9264383512415999
+Epoch: 320, Loss: 0.193073407624119, Accuracy: 0.9182448700902002
+Epoch: 340, Loss: 0.14023420633387196, Accuracy: 0.9336615517303338
+Epoch: 360, Loss: 0.1374425475969333, Accuracy: 0.9338052970136917
+Epoch: 380, Loss: 0.13281175188084907, Accuracy: 0.9360333489057391
+Epoch: 400, Loss: 0.1425970156871995, Accuracy: 0.934200596542926
+Epoch: 420, Loss: 0.13553983931855637, Accuracy: 0.934667768713839
+Epoch: 440, Loss: 0.12226820390584857, Accuracy: 0.9404894526898336
+Epoch: 460, Loss: 0.1375054120873065, Accuracy: 0.9369676932475653
+Epoch: 480, Loss: 0.11373935104167276, Accuracy: 0.9441190210946203
+Epoch: 500, Loss: 0.11175301047258598, Accuracy: 0.9436518489237072
+Epoch: 520, Loss: 0.11137104025760362, Accuracy: 0.9451971107198045
+Epoch: 540, Loss: 0.10361021970824678, Accuracy: 0.9474610989326913
+Epoch: 560, Loss: 0.1052630209299021, Accuracy: 0.9474251626118518
+Epoch: 580, Loss: 0.10451229216978532, Accuracy: 0.9475329715743702
+Epoch: 600, Loss: 0.09719299452826959, Accuracy: 0.9505875588457253
+Epoch: 620, Loss: 0.09120452548413313, Accuracy: 0.9530312286628095
+Epoch: 640, Loss: 0.2728525214474793, Accuracy: 0.9075717828008768
+Epoch: 660, Loss: 0.0898567856571009, Accuracy: 0.9535702734754016
+Epoch: 680, Loss: 0.1003169929392116, Accuracy: 0.9484313795953571
+Epoch: 700, Loss: 0.09281517160955326, Accuracy: 0.952456247529378
+Epoch: 720, Loss: 0.09100943494790284, Accuracy: 0.9534624645128832
+Epoch: 740, Loss: 0.07757264257285947, Accuracy: 0.9572717145218672
+Epoch: 760, Loss: 0.09585052168415498, Accuracy: 0.9520968843209833
+Epoch: 780, Loss: 0.08157940490474534, Accuracy: 0.9566967333884356
+Epoch: 800, Loss: 0.08062539291532003, Accuracy: 0.9569123513134725
+Epoch: 820, Loss: 0.07874817990286406, Accuracy: 0.9574154598052251
+Epoch: 840, Loss: 0.07638378922156124, Accuracy: 0.9589607216013225
+Epoch: 860, Loss: 0.0692615138958822, Accuracy: 0.9610450282100118
+Epoch: 880, Loss: 0.074766328457252, Accuracy: 0.9604700470765803
+Epoch: 900, Loss: 0.08691555525847645, Accuracy: 0.9567686060301146
+Epoch: 920, Loss: 0.07160330013653567, Accuracy: 0.9611528371725303
+Epoch: 940, Loss: 0.0868115596213313, Accuracy: 0.9564811154633989
+Epoch: 960, Loss: 0.07801259254184804, Accuracy: 0.9581341862220146
+Epoch: 980, Loss: 0.07982987994255945, Accuracy: 0.9589966579221619
+Epoch: 1000, Loss: 0.06581848039645558, Accuracy: 0.9631293348187012
+Epoch: 20
+Evaluation Loss: 0.4229914613010347
+Accuracy: 0.8676105940273835
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.00      0.00      0.00       530
+        date       0.00      0.00      0.00       635
+     address       0.39      0.48      0.43      1233
+       total       0.00      0.00      0.00      1341
+       other       0.89      0.98      0.93     24088
+
+    accuracy                           0.87     27827
+   macro avg       0.26      0.29      0.27     27827
+weighted avg       0.79      0.87      0.83     27827
+
+Epoch: 40
+Evaluation Loss: 0.4032015280668126
+Accuracy: 0.8723901246990333
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.00      0.00      0.00       530
+        date       0.00      0.00      0.00       635
+     address       0.44      0.78      0.56      1233
+       total       0.00      0.00      0.00      1341
+       other       0.91      0.97      0.94     24088
+
+    accuracy                           0.87     27827
+   macro avg       0.27      0.35      0.30     27827
+weighted avg       0.81      0.87      0.84     27827
+
+Epoch: 60
+Evaluation Loss: 0.329309706309045
+Accuracy: 0.8896754950228196
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.47      0.70      0.57       530
+        date       0.54      0.13      0.21       635
+     address       0.72      0.59      0.65      1233
+       total       0.00      0.00      0.00      1341
+       other       0.91      0.98      0.94     24088
+
+    accuracy                           0.89     27827
+   macro avg       0.53      0.48      0.47     27827
+weighted avg       0.84      0.89      0.86     27827
+
+Epoch: 80
+Evaluation Loss: 0.29529306280982587
+Accuracy: 0.8965033959823193
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.48      0.29      0.36       530
+        date       0.55      0.36      0.43       635
+     address       0.71      0.82      0.76      1233
+       total       0.00      0.00      0.00      1341
+       other       0.92      0.98      0.95     24088
+
+    accuracy                           0.90     27827
+   macro avg       0.53      0.49      0.50     27827
+weighted avg       0.85      0.90      0.87     27827
+
+Epoch: 100
+Evaluation Loss: 0.27699700367543123
+Accuracy: 0.8996657922161929
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.48      0.29      0.37       530
+        date       0.60      0.29      0.39       635
+     address       0.78      0.78      0.78      1233
+       total       0.00      0.00      0.00      1341
+       other       0.91      0.99      0.95     24088
+
+    accuracy                           0.90     27827
+   macro avg       0.55      0.47      0.50     27827
+weighted avg       0.85      0.90      0.87     27827
+
+Epoch: 120
+Evaluation Loss: 0.25454300919244455
+Accuracy: 0.9044093865670033
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.50      0.29      0.37       530
+        date       0.63      0.36      0.46       635
+     address       0.77      0.85      0.80      1233
+       total       0.80      0.01      0.03      1341
+       other       0.92      0.98      0.95     24088
+
+    accuracy                           0.90     27827
+   macro avg       0.72      0.50      0.52     27827
+weighted avg       0.89      0.90      0.88     27827
+
+Epoch: 140
+Evaluation Loss: 0.2524531906427339
+Accuracy: 0.9031516153376218
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.50      0.28      0.36       530
+        date       0.60      0.36      0.45       635
+     address       0.76      0.81      0.78      1233
+       total       0.57      0.12      0.19      1341
+       other       0.92      0.98      0.95     24088
+
+    accuracy                           0.90     27827
+   macro avg       0.67      0.51      0.55     27827
+weighted avg       0.88      0.90      0.88     27827
+
+Epoch: 160
+Evaluation Loss: 0.21996866334085316
+Accuracy: 0.9103029431846767
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.48      0.72      0.58       530
+        date       0.62      0.51      0.56       635
+     address       0.83      0.81      0.82      1233
+       total       0.68      0.14      0.24      1341
+       other       0.94      0.97      0.95     24088
+
+    accuracy                           0.91     27827
+   macro avg       0.71      0.63      0.63     27827
+weighted avg       0.90      0.91      0.90     27827
+
+Epoch: 180
+Evaluation Loss: 0.207681410361168
+Accuracy: 0.9142918747978582
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.48      0.20      0.28       530
+        date       0.66      0.41      0.51       635
+     address       0.80      0.91      0.85      1233
+       total       0.60      0.33      0.43      1341
+       other       0.94      0.98      0.96     24088
+
+    accuracy                           0.91     27827
+   macro avg       0.70      0.57      0.60     27827
+weighted avg       0.90      0.91      0.90     27827
+
+Epoch: 200
+Evaluation Loss: 0.19557820540643478
+Accuracy: 0.9163402450857081
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.50      0.27      0.35       530
+        date       0.65      0.48      0.55       635
+     address       0.80      0.90      0.85      1233
+       total       0.74      0.23      0.35      1341
+       other       0.94      0.98      0.96     24088
+
+    accuracy                           0.92     27827
+   macro avg       0.72      0.57      0.61     27827
+weighted avg       0.90      0.92      0.90     27827
+
+Epoch: 220
+Evaluation Loss: 0.18790185266686965
+Accuracy: 0.9178136342401265
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.49      0.78      0.60       530
+        date       0.71      0.42      0.53       635
+     address       0.88      0.81      0.85      1233
+       total       0.70      0.27      0.39      1341
+       other       0.94      0.98      0.96     24088
+
+    accuracy                           0.92     27827
+   macro avg       0.74      0.65      0.66     27827
+weighted avg       0.91      0.92      0.91     27827
+
+Epoch: 240
+Evaluation Loss: 0.18943130577257436
+Accuracy: 0.9181729974485212
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.51      0.47      0.49       530
+        date       0.77      0.48      0.59       635
+     address       0.89      0.77      0.83      1233
+       total       0.72      0.21      0.33      1341
+       other       0.93      0.99      0.96     24088
+
+    accuracy                           0.92     27827
+   macro avg       0.76      0.58      0.64     27827
+weighted avg       0.91      0.92      0.91     27827
+
+Epoch: 260
+Evaluation Loss: 0.16733718582595042
+Accuracy: 0.9227009738742947
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.49      0.50      0.49       530
+        date       0.68      0.63      0.66       635
+     address       0.80      0.92      0.86      1233
+       total       0.76      0.32      0.45      1341
+       other       0.95      0.97      0.96     24088
+
+    accuracy                           0.92     27827
+   macro avg       0.74      0.67      0.68     27827
+weighted avg       0.92      0.92      0.92     27827
+
+Epoch: 280
+Evaluation Loss: 0.15088478937860608
+Accuracy: 0.9292413842670787
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.50      0.48      0.49       530
+        date       0.72      0.63      0.67       635
+     address       0.81      0.94      0.87      1233
+       total       0.66      0.58      0.62      1341
+       other       0.96      0.97      0.96     24088
+
+    accuracy                           0.93     27827
+   macro avg       0.73      0.72      0.72     27827
+weighted avg       0.93      0.93      0.93     27827
+
+Epoch: 300
+Evaluation Loss: 0.16597074200940687
+Accuracy: 0.9215510116074316
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.48      0.29      0.36       530
+        date       0.63      0.73      0.67       635
+     address       0.82      0.90      0.86      1233
+       total       0.63      0.49      0.55      1341
+       other       0.95      0.97      0.96     24088
+
+    accuracy                           0.92     27827
+   macro avg       0.70      0.67      0.68     27827
+weighted avg       0.92      0.92      0.92     27827
+
+Epoch: 320
+Evaluation Loss: 0.17429834783308265
+Accuracy: 0.9243540446329105
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.53      0.10      0.17       530
+        date       0.69      0.58      0.63       635
+     address       0.80      0.93      0.86      1233
+       total       0.71      0.42      0.53      1341
+       other       0.95      0.98      0.96     24088
+
+    accuracy                           0.92     27827
+   macro avg       0.73      0.60      0.63     27827
+weighted avg       0.91      0.92      0.91     27827
+
+Epoch: 340
+Evaluation Loss: 0.13318879319022792
+Accuracy: 0.9354583677723075
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.51      0.39      0.44       530
+        date       0.73      0.69      0.71       635
+     address       0.85      0.89      0.87      1233
+       total       0.72      0.61      0.66      1341
+       other       0.96      0.97      0.97     24088
+
+    accuracy                           0.94     27827
+   macro avg       0.76      0.71      0.73     27827
+weighted avg       0.93      0.94      0.93     27827
+
+Epoch: 360
+Evaluation Loss: 0.13702020782601926
+Accuracy: 0.9335178064469759
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.51      0.59      0.54       530
+        date       0.71      0.74      0.73       635
+     address       0.89      0.82      0.85      1233
+       total       0.67      0.71      0.69      1341
+       other       0.97      0.96      0.97     24088
+
+    accuracy                           0.93     27827
+   macro avg       0.75      0.76      0.76     27827
+weighted avg       0.94      0.93      0.93     27827
+
+Epoch: 380
+Evaluation Loss: 0.13666489321825115
+Accuracy: 0.934200596542926
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.51      0.34      0.41       530
+        date       0.75      0.62      0.68       635
+     address       0.84      0.91      0.88      1233
+       total       0.81      0.49      0.61      1341
+       other       0.95      0.98      0.97     24088
+
+    accuracy                           0.93     27827
+   macro avg       0.77      0.67      0.71     27827
+weighted avg       0.93      0.93      0.93     27827
+
+Epoch: 400
+Evaluation Loss: 0.13324990729952968
+Accuracy: 0.9361411578682575
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.50      0.65      0.57       530
+        date       0.84      0.62      0.72       635
+     address       0.90      0.81      0.86      1233
+       total       0.76      0.56      0.64      1341
+       other       0.96      0.98      0.97     24088
+
+    accuracy                           0.94     27827
+   macro avg       0.79      0.72      0.75     27827
+weighted avg       0.94      0.94      0.93     27827
+
+Epoch: 420
+Evaluation Loss: 0.1257112872057645
+Accuracy: 0.9388004456103785
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.51      0.62      0.56       530
+        date       0.77      0.78      0.78       635
+     address       0.91      0.83      0.86      1233
+       total       0.73      0.63      0.68      1341
+       other       0.97      0.97      0.97     24088
+
+    accuracy                           0.94     27827
+   macro avg       0.78      0.76      0.77     27827
+weighted avg       0.94      0.94      0.94     27827
+
+Epoch: 440
+Evaluation Loss: 0.12433208851504696
+Accuracy: 0.9396269809896862
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.51      0.59      0.55       530
+        date       0.72      0.72      0.72       635
+     address       0.89      0.85      0.87      1233
+       total       0.78      0.65      0.71      1341
+       other       0.97      0.97      0.97     24088
+
+    accuracy                           0.94     27827
+   macro avg       0.77      0.76      0.76     27827
+weighted avg       0.94      0.94      0.94     27827
+
+Epoch: 460
+Evaluation Loss: 0.11864298720692479
+Accuracy: 0.9396988536313652
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.52      0.30      0.38       530
+        date       0.81      0.72      0.76       635
+     address       0.85      0.91      0.88      1233
+       total       0.73      0.65      0.69      1341
+       other       0.96      0.98      0.97     24088
+
+    accuracy                           0.94     27827
+   macro avg       0.77      0.71      0.74     27827
+weighted avg       0.93      0.94      0.94     27827
+
+Epoch: 480
+Evaluation Loss: 0.10358387200060741
+Accuracy: 0.9468142451575807
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.51      0.46      0.49       530
+        date       0.86      0.69      0.76       635
+     address       0.85      0.90      0.87      1233
+       total       0.79      0.74      0.76      1341
+       other       0.97      0.98      0.97     24088
+
+    accuracy                           0.95     27827
+   macro avg       0.80      0.75      0.77     27827
+weighted avg       0.95      0.95      0.95     27827
+
+Epoch: 500
+Evaluation Loss: 0.11861052107094794
+Accuracy: 0.9429331225069177
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.53      0.23      0.32       530
+        date       0.88      0.65      0.74       635
+     address       0.82      0.93      0.87      1233
+       total       0.81      0.65      0.72      1341
+       other       0.96      0.98      0.97     24088
+
+    accuracy                           0.94     27827
+   macro avg       0.80      0.69      0.72     27827
+weighted avg       0.94      0.94      0.94     27827
+
+Epoch: 520
+Evaluation Loss: 0.1055527183032313
+Accuracy: 0.9463111366658281
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.52      0.29      0.37       530
+        date       0.82      0.79      0.80       635
+     address       0.85      0.91      0.88      1233
+       total       0.75      0.75      0.75      1341
+       other       0.97      0.98      0.97     24088
+
+    accuracy                           0.95     27827
+   macro avg       0.78      0.74      0.76     27827
+weighted avg       0.94      0.95      0.94     27827
+
+Epoch: 540
+Evaluation Loss: 0.09909743197666582
+Accuracy: 0.9487907428037518
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.53      0.41      0.46       530
+        date       0.91      0.70      0.79       635
+     address       0.94      0.83      0.88      1233
+       total       0.82      0.70      0.76      1341
+       other       0.96      0.99      0.97     24088
+
+    accuracy                           0.95     27827
+   macro avg       0.83      0.73      0.77     27827
+weighted avg       0.95      0.95      0.95     27827
+
+Epoch: 560
+Evaluation Loss: 0.10949699655752773
+Accuracy: 0.9462392640241493
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.51      0.50      0.51       530
+        date       0.83      0.76      0.79       635
+     address       0.88      0.85      0.87      1233
+       total       0.76      0.77      0.76      1341
+       other       0.97      0.98      0.97     24088
+
+    accuracy                           0.95     27827
+   macro avg       0.79      0.77      0.78     27827
+weighted avg       0.95      0.95      0.95     27827
+
+Epoch: 580
+Evaluation Loss: 0.09428430807798407
+Accuracy: 0.9512344126208359
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.53      0.38      0.44       530
+        date       0.91      0.69      0.78       635
+     address       0.84      0.92      0.88      1233
+       total       0.80      0.81      0.80      1341
+       other       0.97      0.98      0.98     24088
+
+    accuracy                           0.95     27827
+   macro avg       0.81      0.76      0.78     27827
+weighted avg       0.95      0.95      0.95     27827
+
+Epoch: 600
+Evaluation Loss: 0.09539792247751887
+Accuracy: 0.9514500305458727
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.54      0.24      0.33       530
+        date       0.87      0.73      0.80       635
+     address       0.87      0.91      0.89      1233
+       total       0.80      0.78      0.79      1341
+       other       0.97      0.98      0.98     24088
+
+    accuracy                           0.95     27827
+   macro avg       0.81      0.73      0.76     27827
+weighted avg       0.95      0.95      0.95     27827
+
+Epoch: 620
+Evaluation Loss: 0.08129237772709177
+Accuracy: 0.9548999173464621
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.53      0.49      0.51       530
+        date       0.84      0.80      0.82       635
+     address       0.91      0.86      0.89      1233
+       total       0.81      0.85      0.83      1341
+       other       0.98      0.98      0.98     24088
+
+    accuracy                           0.95     27827
+   macro avg       0.81      0.80      0.80     27827
+weighted avg       0.95      0.95      0.95     27827
+
+Epoch: 640
+Evaluation Loss: 0.23461229897053668
+Accuracy: 0.9140762568728213
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.49      0.73      0.59       530
+        date       0.72      0.36      0.48       635
+     address       0.88      0.83      0.85      1233
+       total       0.66      0.16      0.26      1341
+       other       0.93      0.98      0.96     24088
+
+    accuracy                           0.91     27827
+   macro avg       0.74      0.61      0.63     27827
+weighted avg       0.91      0.91      0.90     27827
+
+Epoch: 660
+Evaluation Loss: 0.08220143310090368
+Accuracy: 0.956337370180041
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.52      0.58      0.55       530
+        date       0.85      0.78      0.82       635
+     address       0.89      0.91      0.90      1233
+       total       0.84      0.80      0.82      1341
+       other       0.98      0.98      0.98     24088
+
+    accuracy                           0.96     27827
+   macro avg       0.82      0.81      0.81     27827
+weighted avg       0.96      0.96      0.96     27827
+
+Epoch: 680
+Evaluation Loss: 0.08151195550611777
+Accuracy: 0.9560858159341646
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.52      0.46      0.49       530
+        date       0.83      0.82      0.83       635
+     address       0.89      0.89      0.89      1233
+       total       0.81      0.87      0.84      1341
+       other       0.98      0.98      0.98     24088
+
+    accuracy                           0.96     27827
+   macro avg       0.81      0.80      0.80     27827
+weighted avg       0.96      0.96      0.96     27827
+
+Epoch: 700
+Evaluation Loss: 0.0932779877280542
+Accuracy: 0.9531031013044885
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.52      0.74      0.61       530
+        date       0.88      0.72      0.79       635
+     address       0.96      0.80      0.87      1233
+       total       0.86      0.75      0.80      1341
+       other       0.97      0.98      0.98     24088
+
+    accuracy                           0.95     27827
+   macro avg       0.84      0.80      0.81     27827
+weighted avg       0.96      0.95      0.95     27827
+
+Epoch: 720
+Evaluation Loss: 0.07998703399947447
+Accuracy: 0.957702950371941
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.52      0.62      0.57       530
+        date       0.83      0.81      0.82       635
+     address       0.89      0.91      0.90      1233
+       total       0.83      0.85      0.84      1341
+       other       0.98      0.98      0.98     24088
+
+    accuracy                           0.96     27827
+   macro avg       0.81      0.83      0.82     27827
+weighted avg       0.96      0.96      0.96     27827
+
+Epoch: 740
+Evaluation Loss: 0.08053485968316249
+Accuracy: 0.9568404786717936
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.53      0.63      0.57       530
+        date       0.80      0.86      0.83       635
+     address       0.89      0.92      0.90      1233
+       total       0.79      0.88      0.83      1341
+       other       0.99      0.97      0.98     24088
+
+    accuracy                           0.96     27827
+   macro avg       0.80      0.85      0.82     27827
+weighted avg       0.96      0.96      0.96     27827
+
+Epoch: 760
+Evaluation Loss: 0.09278292802357396
+Accuracy: 0.951773457433428
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.54      0.33      0.41       530
+        date       0.86      0.72      0.78       635
+     address       0.87      0.91      0.89      1233
+       total       0.88      0.68      0.77      1341
+       other       0.97      0.99      0.98     24088
+
+    accuracy                           0.95     27827
+   macro avg       0.82      0.73      0.77     27827
+weighted avg       0.95      0.95      0.95     27827
+
+Epoch: 780
+Evaluation Loss: 0.07498305663466454
+Accuracy: 0.958924785280483
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.52      0.58      0.55       530
+        date       0.93      0.72      0.81       635
+     address       0.95      0.84      0.89      1233
+       total       0.83      0.88      0.85      1341
+       other       0.98      0.98      0.98     24088
+
+    accuracy                           0.96     27827
+   macro avg       0.84      0.80      0.82     27827
+weighted avg       0.96      0.96      0.96     27827
+
+Epoch: 800
+Evaluation Loss: 0.0840288179442864
+Accuracy: 0.9567326697092752
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.52      0.49      0.50       530
+        date       0.86      0.78      0.82       635
+     address       0.85      0.94      0.89      1233
+       total       0.83      0.87      0.84      1341
+       other       0.98      0.98      0.98     24088
+
+    accuracy                           0.96     27827
+   macro avg       0.81      0.81      0.81     27827
+weighted avg       0.96      0.96      0.96     27827
+
+Epoch: 820
+Evaluation Loss: 0.07894820907665778
+Accuracy: 0.9579545046178173
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.52      0.68      0.59       530
+        date       0.89      0.74      0.81       635
+     address       0.91      0.88      0.90      1233
+       total       0.82      0.89      0.85      1341
+       other       0.98      0.98      0.98     24088
+
+    accuracy                           0.96     27827
+   macro avg       0.82      0.83      0.82     27827
+weighted avg       0.96      0.96      0.96     27827
+
+Epoch: 840
+Evaluation Loss: 0.08139129521599574
+Accuracy: 0.9585654220720883
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.52      0.64      0.57       530
+        date       0.83      0.81      0.82       635
+     address       0.94      0.85      0.89      1233
+       total       0.88      0.81      0.85      1341
+       other       0.98      0.98      0.98     24088
+
+    accuracy                           0.96     27827
+   macro avg       0.83      0.82      0.82     27827
+weighted avg       0.96      0.96      0.96     27827
+
+Epoch: 860
+Evaluation Loss: 0.06486860300277093
+Accuracy: 0.9631652711395408
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.52      0.53      0.53       530
+        date       0.86      0.81      0.84       635
+     address       0.93      0.88      0.90      1233
+       total       0.89      0.88      0.88      1341
+       other       0.98      0.99      0.98     24088
+
+    accuracy                           0.96     27827
+   macro avg       0.84      0.82      0.83     27827
+weighted avg       0.96      0.96      0.96     27827
+
+Epoch: 880
+Evaluation Loss: 0.0700262552777002
+Accuracy: 0.9614043914184066
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.52      0.66      0.58       530
+        date       0.90      0.77      0.83       635
+     address       0.99      0.83      0.90      1233
+       total       0.87      0.84      0.86      1341
+       other       0.98      0.99      0.98     24088
+
+    accuracy                           0.96     27827
+   macro avg       0.85      0.82      0.83     27827
+weighted avg       0.96      0.96      0.96     27827
+
+Epoch: 900
+Evaluation Loss: 0.07850840591009735
+Accuracy: 0.9589607216013225
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.52      0.50      0.51       530
+        date       0.82      0.85      0.84       635
+     address       0.87      0.92      0.89      1233
+       total       0.89      0.81      0.85      1341
+       other       0.98      0.98      0.98     24088
+
+    accuracy                           0.96     27827
+   macro avg       0.82      0.81      0.81     27827
+weighted avg       0.96      0.96      0.96     27827
+
+Epoch: 920
+Evaluation Loss: 0.0689623545884162
+Accuracy: 0.9616918819851223
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.54      0.50      0.52       530
+        date       0.82      0.85      0.84       635
+     address       0.93      0.87      0.90      1233
+       total       0.90      0.84      0.87      1341
+       other       0.98      0.99      0.98     24088
+
+    accuracy                           0.96     27827
+   macro avg       0.83      0.81      0.82     27827
+weighted avg       0.96      0.96      0.96     27827
+
+Epoch: 940
+Evaluation Loss: 0.08525638885853827
+Accuracy: 0.9566248607467568
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.53      0.45      0.49       530
+        date       0.87      0.80      0.83       635
+     address       0.87      0.94      0.90      1233
+       total       0.82      0.83      0.82      1341
+       other       0.98      0.98      0.98     24088
+
+    accuracy                           0.96     27827
+   macro avg       0.81      0.80      0.80     27827
+weighted avg       0.96      0.96      0.96     27827
+
+Epoch: 960
+Evaluation Loss: 0.06941174002465351
+Accuracy: 0.9618715635893197
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.53      0.47      0.50       530
+        date       0.85      0.85      0.85       635
+     address       0.91      0.90      0.91      1233
+       total       0.84      0.90      0.87      1341
+       other       0.98      0.98      0.98     24088
+
+    accuracy                           0.96     27827
+   macro avg       0.82      0.82      0.82     27827
+weighted avg       0.96      0.96      0.96     27827
+
+Epoch: 980
+Evaluation Loss: 0.08784223284370216
+Accuracy: 0.9564811154633989
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.53      0.49      0.51       530
+        date       0.86      0.80      0.83       635
+     address       0.91      0.88      0.89      1233
+       total       0.86      0.77      0.81      1341
+       other       0.97      0.99      0.98     24088
+
+    accuracy                           0.96     27827
+   macro avg       0.83      0.78      0.81     27827
+weighted avg       0.96      0.96      0.96     27827
+
+Epoch: 1000
+Evaluation Loss: 0.06870375336833702
+Accuracy: 0.9634168253854171
+Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.54      0.43      0.48       530
+        date       0.83      0.88      0.85       635
+     address       0.93      0.88      0.90      1233
+       total       0.85      0.93      0.89      1341
+       other       0.98      0.98      0.98     24088
+
+    accuracy                           0.96     27827
+   macro avg       0.83      0.82      0.82     27827
+weighted avg       0.96      0.96      0.96     27827
+
+Final Evaluation Loss: 0.06980912326726803, Accuracy: 0.9629855895353434
+Final Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.54      0.41      0.46       530
+        date       0.82      0.87      0.85       635
+     address       0.93      0.88      0.90      1233
+       total       0.85      0.93      0.89      1341
+       other       0.98      0.98      0.98     24088
+
+    accuracy                           0.96     27827
+   macro avg       0.82      0.81      0.82     27827
+weighted avg       0.96      0.96      0.96     27827
+
+Test Loss: 0.514499924872836, Test Accuracy: 0.907091080995903
+Test Classification Report:
+              precision    recall  f1-score   support
+
+     company       0.48      0.38      0.43       296
+        date       0.66      0.54      0.60       352
+     address       0.76      0.71      0.73       709
+       total       0.53      0.43      0.48       722
+       other       0.94      0.96      0.95     13786
+
+    accuracy                           0.91     15865
+   macro avg       0.67      0.60      0.64     15865
+weighted avg       0.90      0.91      0.90     15865
+
+Model saved to logs/20240714_164246/invoice_gnn.pth
+Model parameters saved to logs/20240714_164246/model_params.txt
+Errors logged.
+Percentage of erroneous files: 16.96%
